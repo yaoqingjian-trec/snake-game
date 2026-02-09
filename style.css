@@ -101,6 +101,49 @@ button:disabled {
     margin: 5px 0;
 }
 
+/* 虚拟方向键 */
+.d-pad {
+    display: none;
+    margin: 20px auto;
+    max-width: 200px;
+}
+
+.d-pad-btn {
+    width: 60px;
+    height: 60px;
+    font-size: 24px;
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
+    cursor: pointer;
+    margin: 5px;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.d-pad-btn:active {
+    background: rgba(255, 255, 255, 0.4);
+    transform: scale(0.95);
+}
+
+.d-pad-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+/* 移动端显示虚拟方向键 */
+@media (max-width: 768px) {
+    .d-pad {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
 @media (max-width: 480px) {
     h1 {
         font-size: 2em;
@@ -120,5 +163,11 @@ button:disabled {
         padding: 10px 20px;
         font-size: 1em;
         margin: 5px;
+    }
+
+    .d-pad-btn {
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
     }
 }

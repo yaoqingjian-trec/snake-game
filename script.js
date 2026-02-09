@@ -223,5 +223,76 @@ document.addEventListener('keydown', (e) => {
 startBtn.addEventListener('click', startGame);
 pauseBtn.addEventListener('click', togglePause);
 
+// 触摸滑动控制
+let touchStartX = 0;
+let touchStartY = 0;
+const MIN_SWIPE_DISTANCE = 30; // 最小滑动距离
+
+canvas.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+}, {passive: false});
+
+canvas.addEventListener('touchmove', (e) => {
+    e.preventDefault();
+}, {passive: false});
+
+canvas.addEventListener('touchend', (e) => {
+    e.preventDefault();
+    if (!isGameRunning || isPaused) return;
+
+    const touchEndX = e.changedTouches[0].clientX;
+    const touchEndY = e.changedTouches[0].clientY;
+
+    const deltaX = touchEndX - touchStartX;
+    const deltaY = touchEndY - touchStartY;
+
+    // 判断滑动方向
+    if (Math.abs(deltaX) > Math.abs(deltaY)) {
+        // 水平滑动
+        if (Math.abs(deltaX) > MIN_SWIPE_DISTANCE) {
+            if (deltaX > 0 && direction.x !== -1) {
+                nextDirection = {x: 1, y: 0}; // 右
+            } else if (deltaX < 0 && direction.x !== 1) {
+                nextDirection = {x: -1, y: 0}; // 左
+            }
+        }
+    } else {
+        // 垂直滑动
+        if (Math.abs(deltaY) > MIN_SWIPE_DISTANCE) {
+            if (deltaY > 0 && direction.y !== -1) {
+                nextDirection = {x: 0, y: 1}; // 下
+            } else if (deltaY < 0 && direction.y !== 1) {
+                nextDirection = {x: 0, y: -1}; // 上
+            }
+        }
+    }
+}, {passive: false});
+
+// 虚拟方向键控制
+document.querySelectorAll('.d-pad button').forEach(btn => {
+    btn.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        if (!isGameRunning || isPaused) return;
+
+        const dir = btn.dataset.direction;
+        switch(dir) {
+            case 'up':
+                if (direction.y !== 1) nextDirection = {x: 0, y: -1};
+                break;
+            case 'down':
+                if (direction.y !== -1) nextDirection = {x: 0, y: 1};
+                break;
+            case 'left':
+                if (direction.x !== 1) nextDirection = {x: -1, y: 0};
+                break;
+            case 'right':
+                if (direction.x !== -1) nextDirection = {x: 1, y: 0};
+                break;
+        }
+    }, {passive: false});
+});
+
 // 初始绘制
 draw();
